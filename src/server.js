@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
-const noteData = require('./db/db.json');
 const fs = require('fs');
+const { parse } = require('path');
 
 const app = express();
 const PORT = 3001;
@@ -15,11 +15,22 @@ app.use(express.static('public'));
 // Routing
 // Index route
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
+
 // Notes route
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
 
 // API calls
-app.get('/api/notes', (req, res) => res.json(noteData));
+app.get('/api/notes', (req, res) => {
+    fs.readFile('./db/db.json', (err, data) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        
+        // Sends back the data from the file
+        return res.json(JSON.parse(data));
+    });
+});
+
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
     
@@ -28,13 +39,17 @@ app.post('/api/notes', (req, res) => {
         return res.status(500).json("Error in saving Note!");
     }
     
-    let newNote = {
-        title,
-        text
-    }
-    
     fs.readFile('./db/db.json', (err, data) => {
-        let parsedNotes = JSON.parse(data);
+        let parsedNotes = [];
+        
+        if (data.length) parsedNotes = JSON.parse(data);
+        
+        // Create a new note with id
+        let newNote = {
+            id: parsedNotes.length,
+            title,
+            text
+        }
         
         parsedNotes.push(newNote);
         
@@ -46,6 +61,29 @@ app.post('/api/notes', (req, res) => {
                 console.log("Successfully saved note!");
             }
         });
+        
+        return res.status(201).json(parsedNotes);
+    });
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+    const idParam = req.params.id;
+    
+    fs.readFile('./db/db.json', (err, data) => {
+        let parsedNotes = JSON.parse(data);
+        
+        parsedNotes = parsedNotes.filter(({id}) => id != idParam);
+        
+        fs.writeFile('./db/db.json', JSON.stringify(parsedNotes), (err) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log("Successfully deleted note!");
+            }
+        });
+        
+        return res.status(200).json(parsedNotes);
     });
 });
 
