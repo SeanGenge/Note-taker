@@ -106,6 +106,8 @@ const handleNoteView = (e) => {
 const handleNewNoteView = (e) => {
   activeNote = {};
   renderActiveNote();
+  // Highlight the selected note
+  highlightNote()
 };
 
 const handleRenderSaveBtn = () => {

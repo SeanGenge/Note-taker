@@ -1,8 +1,41 @@
+:root {
+  --dark-blue: #1434A4;
+  --light-blue: #1F51FF;
+  --light-black: #28282B;
+  --black: #1B1212;
+  --green: #228B22;
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+.custom-navbar {
+  background-color: var(--dark-blue);
+  z-index: 1;
+}
+
+.started-btn {
+  border: none;
+}
+
+.started-btn:hover {
+  background-color: var(--green);
+}
+
+.light-blue-bg {
+  background-color: var(--light-blue);
+}
+
+.dark-blue-bg {
+  background-color: var(--dark-blue);
+}
+
+.white-colour {
+  color: white;
 }
 
 .save-note {
@@ -14,11 +47,16 @@ body {
   margin-right: 15px;
   font-size: 1.5rem;
   cursor: pointer;
+  transition: transform .2s;
+}
+
+.icons i:hover {
+  transform: scale(1.2);
 }
 
 .note-textarea,
 .note-title {
-  color: #000000;
+  color: black;
   width: 100%;
   outline: none;
   border: none;
@@ -68,6 +106,11 @@ body {
 .list-container i {
   font-size: 1.1rem;
   cursor: pointer;
+  transition: transform .2s;
+}
+
+.list-container i:hover {
+  transform: scale(1.2);
 }
 
 .list-container .list-group-item {
