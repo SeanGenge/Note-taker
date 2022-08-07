@@ -3,6 +3,7 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+let currSeletedNote;
 
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
@@ -100,14 +101,28 @@ const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
   renderActiveNote();
+  
+  highlightNote(e.target);
 };
+
+const highlightNote = (element) => {
+  // Set element to null if you want to not highlight anything
+  // Highlight the current note so you know what is selected
+  if (currSeletedNote) {
+    currSeletedNote.classList.remove("highlighted-note");
+  }
+  
+  currSeletedNote = element;
+  
+  if (element) currSeletedNote.classList.add("highlighted-note");
+}
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
   renderActiveNote();
   // Highlight the selected note
-  highlightNote()
+  highlightNote(null);
 };
 
 const handleRenderSaveBtn = () => {

@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const { parse } = require('path');
+const moment = require('moment');
 
 const app = express();
 const PORT = 3001;
@@ -26,8 +27,13 @@ app.get('/api/notes', (req, res) => {
             return res.status(500).send(err);
         }
         
-        // Sends back the data from the file
+        if (data.length) {
+            // Sends back the data from the file
         return res.json(JSON.parse(data));
+        }
+        
+        // Return an empty array if the file is empty
+        return [];
     });
 });
 
@@ -44,9 +50,11 @@ app.post('/api/notes', (req, res) => {
         
         if (data.length) parsedNotes = JSON.parse(data);
         
+        let time = moment().format('DDMMYYYYhhmmss');
+        
         // Create a new note with id
         let newNote = {
-            id: parsedNotes.length,
+            id: time + '-' + title,
             title,
             text
         }

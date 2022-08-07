@@ -42,6 +42,11 @@ body {
   display: none;
 }
 
+.highlighted-note {
+  background-color: var(--light-blue);
+  color: white;
+}
+
 .icons i {
   margin-left: 15px;
   margin-right: 15px;
@@ -99,8 +104,18 @@ body {
 }
 
 .list-item-title {
-  display: inline-block;
-  width: 75%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  padding-left: 15px;
+  padding-top: 15px;
+}
+
+.delete-note {
+  position: relative;
+  z-index: 1;
 }
 
 .list-container i {
