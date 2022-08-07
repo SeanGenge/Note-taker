@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { parse } = require('path');
 const moment = require('moment');
 
 const app = express();
@@ -11,18 +10,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve the static files
-app.use(express.static('public'));
+app.use(express.static('src/public'));
 
 // Routing
 // Index route
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'src/public/index.html')));
 
 // Notes route
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
+app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'src/public/notes.html')));
 
 // API calls
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./db/db.json', (err, data) => {
+    fs.readFile('./src/db/db.json', (err, data) => {
         if (err) {
             return res.status(500).send(err);
         }
@@ -45,7 +44,7 @@ app.post('/api/notes', (req, res) => {
         return res.status(500).json("Error in saving Note!");
     }
     
-    fs.readFile('./db/db.json', (err, data) => {
+    fs.readFile('./src/db/db.json', (err, data) => {
         let parsedNotes = [];
         
         if (data.length) parsedNotes = JSON.parse(data);
@@ -61,7 +60,7 @@ app.post('/api/notes', (req, res) => {
         
         parsedNotes.push(newNote);
         
-        fs.writeFile('./db/db.json', JSON.stringify(parsedNotes), (err) => {
+        fs.writeFile('./src/db/db.json', JSON.stringify(parsedNotes), (err) => {
             if (err) {
                 console.log(err);
             }
@@ -77,12 +76,12 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
     const idParam = req.params.id;
     
-    fs.readFile('./db/db.json', (err, data) => {
+    fs.readFile('./src/db/db.json', (err, data) => {
         let parsedNotes = JSON.parse(data);
         
         parsedNotes = parsedNotes.filter(({id}) => id != idParam);
         
-        fs.writeFile('./db/db.json', JSON.stringify(parsedNotes), (err) => {
+        fs.writeFile('./src/db/db.json', JSON.stringify(parsedNotes), (err) => {
             if (err) {
                 console.log(err);
             }
